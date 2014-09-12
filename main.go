@@ -19,6 +19,7 @@ var (
 	redirectUrl             = flag.String("redirect-url", "", "the OAuth Redirect URL. ie: \"https://internalapp.yourcompany.com/oauth2/callback\"")
 	clientID                = flag.String("client-id", "", "the Oauth Client ID: ie: \"123456.apps.googleusercontent.com\"")
 	clientSecret            = flag.String("client-secret", "", "the OAuth Client Secret")
+	headerBasicAuth         = flag.Bool("header-basic-auth", false, "use Authorization: Basic header for authorization")
 	loginUrl                = flag.String("login-url", "", "the OAuth Login URL")
 	redemptionUrl           = flag.String("redemption-url", "", "the OAuth code redemption URL")
 	cookieSecret            = flag.String("cookie-secret", "", "the seed string for secure cookies")
@@ -79,7 +80,7 @@ func main() {
 	}
 
 	validator := NewCommandValidator(*userVerificationCommand)
-	oauthproxy := NewOauthProxy(upstreamUrls, *clientID, *clientSecret, *loginUrl, *redemptionUrl, *oauthScope, validator)
+	oauthproxy := NewOauthProxy(upstreamUrls, *clientID, *clientSecret, *headerBasicAuth, *loginUrl, *redemptionUrl, *oauthScope, validator)
 	oauthproxy.SetRedirectUrl(redirectUrl)
 
 	listener, err := net.Listen("tcp", *httpAddr)
