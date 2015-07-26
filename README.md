@@ -1,7 +1,9 @@
 oauth_proxy
 =================
 
-Note: this is a fork of bit.ly's google_auth_proxy project that works for any oauth provider (where any has actually been tested on Github and Google, YMMV)
+Note (7/2015) - bit.ly has renamed their project to oauth2_proxy and it now works natively with several other providers, possibliy eliminating the need for this fork.  Check it out [here](https://github.com/bitly/oauth2_proxy)
+
+This is a fork of bit.ly's google_auth_proxy project that works for any oauth provider (where any has actually been tested on Github and Google, YMMV)
 
 A reverse proxy that provides authentication using an oauth server to validate 
 individual accounts.
