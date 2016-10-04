@@ -45,6 +45,7 @@ Usage of ./gooauth_proxy:
   -client-secret="": the OAuth Client Secret
   -cookie-domain="": an optional cookie domain to force cookies to
   -cookie-secret="": the seed string for secure cookies
+  -header-basic-auth=false: use Authorization: Basic header for authorization (see RFC 2617 section 2)
   -google-apps-domain="": authenticate against the given google apps domain
   -http-address="127.0.0.1:4180": <addr>:<port> to listen on for HTTP clients
   -pass-basic-auth=true: pass HTTP Basic Auth information to upstream

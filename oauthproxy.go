@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/bitly/go-simplejson"
@@ -29,11 +30,12 @@ type OauthProxy struct {
 	oauthScope         string
 	clientID           string
 	clientSecret       string
+	headerBasicAuth    bool
 	SignInMessage      string
 	serveMux           *http.ServeMux
 }
 
-func NewOauthProxy(proxyUrls []*url.URL, clientID string, clientSecret string, oauthLoginUrl string, oauthRedemptionUrl string, oauthScope string, validator func(string) bool) *OauthProxy {
+func NewOauthProxy(proxyUrls []*url.URL, clientID string, clientSecret string, headerBasicAuth bool, oauthLoginUrl string, oauthRedemptionUrl string, oauthScope string, validator func(string) bool) *OauthProxy {
 	login, _ := url.Parse(oauthLoginUrl)
 	redeem, _ := url.Parse(oauthRedemptionUrl)
 	serveMux := http.NewServeMux()
@@ -50,6 +52,7 @@ func NewOauthProxy(proxyUrls []*url.URL, clientID string, clientSecret string, o
 
 		clientID:           clientID,
 		clientSecret:       clientSecret,
+		headerBasicAuth:    headerBasicAuth,
 		oauthScope:         oauthScope,
 		oauthRedemptionUrl: redeem,
 		oauthLoginUrl:      login,
@@ -104,6 +107,10 @@ func (p *OauthProxy) redeemCode(code string) (string, error) {
 	params.Add("grant_type", "authorization_code")
 	req, err := http.NewRequest("POST", p.oauthRedemptionUrl.String(), bytes.NewBufferString(params.Encode()))
 	req.Header.Set("Accept", "application/json")
+	if p.headerBasicAuth {
+		token := []byte(fmt.Sprintf("%s:%s", p.clientID, p.clientSecret))
+		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString(token)))
+	}
 	if err != nil {
 		log.Printf("failed building request %s", err.Error())
 		return "", err
